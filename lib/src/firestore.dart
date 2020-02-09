@@ -540,8 +540,11 @@ class _FirestoreData {
       item = _dartify(item);
       result.add(item);
     }
-    return result;
+      
+    return List.from(result);
   }
+    
+  
 
   void setList(String key, List value) {
     assert(key != null);
