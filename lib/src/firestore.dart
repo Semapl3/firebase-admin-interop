@@ -541,10 +541,8 @@ class _FirestoreData {
       result.add(item);
     }
       
-    return List.from(result);
+    return result;
   }
-    
-  
 
   void setList(String key, List value) {
     assert(key != null);
