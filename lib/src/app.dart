@@ -42,11 +42,12 @@ class App {
       _firestore ??= new Firestore(nativeInstance.firestore());
   Firestore _firestore;
 
-  /// Renders this app unusable and frees the resources of all associated
-  /// services.
-  Future<void> delete() => promiseToFuture<void>(nativeInstance.delete());
-
+  /// Gets [Messaging] client for this application.
   Messaging messaging() =>
       _messaging ??= new Messaging(nativeInstance.messaging());
   Messaging _messaging;
+
+  /// Renders this app unusable and frees the resources of all associated
+  /// services.
+  Future<void> delete() => promiseToFuture<void>(nativeInstance.delete());
 }

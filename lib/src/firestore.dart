@@ -76,11 +76,17 @@ class Firestore {
     return new CollectionReference(nativeInstance.collection(path), this);
   }
 
-  /// Gets a [DocumentQuery] instance that refers to a query across all
-  /// collections with the given name.
-  DocumentQuery collectionGroup(String name) {
-    assert(name != null);
-    return new DocumentQuery(nativeInstance.collectionGroup(name), this);
+  /// Creates and returns a new Query that includes all documents in the
+  /// database that are contained in a collection or subcollection with the
+  /// given [collectionId].
+  ///
+  /// [collectionId] identifies the collections to query over. Every collection
+  /// or subcollection with this ID as the last segment of its path will be
+  /// included. Cannot contain a slash.
+  DocumentQuery collectionGroup(String collectionId) {
+    assert(collectionId != null);
+    return new DocumentQuery(
+        nativeInstance.collectionGroup(collectionId), this);
   }
 
   /// Gets a [DocumentReference] for the specified Firestore path.
@@ -112,8 +118,8 @@ class Firestore {
 
   /// Fetches the root collections that are associated with this Firestore
   /// database.
-  Future<List<CollectionReference>> getCollections() async =>
-      (await promiseToFuture<List>(nativeInstance.getCollections()))
+  Future<List<CollectionReference>> listCollections() async =>
+      (await promiseToFuture<List>(nativeInstance.listCollections()))
           .map((nativeCollectionReference) =>
               CollectionReference(nativeCollectionReference, this))
           .toList(growable: false);
@@ -268,8 +274,8 @@ class DocumentReference {
   }
 
   /// Fetches the subcollections that are direct children of this document.
-  Future<List<CollectionReference>> getCollections() async =>
-      (await promiseToFuture<List>(nativeInstance.getCollections()))
+  Future<List<CollectionReference>> listCollections() async =>
+      (await promiseToFuture<List>(nativeInstance.listCollections()))
           .map((nativeCollectionReference) =>
               CollectionReference(nativeCollectionReference, firestore))
           .toList(growable: false);
@@ -535,12 +541,11 @@ class _FirestoreData {
     if (data is! List) {
       throw new StateError('Expected list but got ${data.runtimeType}.');
     }
-    final result = new List();
+    final result = [];
     for (var item in data) {
       item = _dartify(item);
       result.add(item);
     }
-      
     return result;
   }
 
